@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>STAR UNIVERSITY - Course Search Catalogue</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* ===== PAGE-SPECIFIC STYLES ===== */
+      .refine-sidebar {
+        width: 260px;
+        background: #ffffff;
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-radius: 8px;
+        padding: 20px;
+        flex-shrink: 0;
+      }
+
+      .refine-sidebar .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary-color, #1a365d);
+      }
+
+      .refine-sidebar .sidebar-header a {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent-color, #3182ce);
+        text-decoration: none;
+      }
+
+      .filter-block-section {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        text-align: left;
+      }
+
+      .filter-block-section:last-of-type {
+        border: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .filter-block-section .filter-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--secondary-color, #4a5568);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+      }
+
+      .filter-block-section label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #2d3748;
+        font-weight: 500;
+        padding: 4px 0;
+        cursor: pointer;
+      }
+
+      .filter-block-section input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .toggle-row .toggle-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .toggle-switch {
+        width: 36px;
+        height: 20px;
+        background-color: #cbd5e1;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        flex-shrink: 0;
+      }
+
+      .toggle-switch.active {
+        background-color: var(--primary-color, #1a365d);
+      }
+
+      .toggle-switch::after {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 16px;
+        height: 16px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.2s;
+      }
+
+      .toggle-switch.active::after {
+        transform: translateX(16px);
+      }
+
+      .filter-subtext {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 4px;
+      }
+
+      .helpdesk-info {
+        background-color: #fffbeb;
+        border: 1px solid #fef3c7;
+        border-radius: 6px;
+        padding: 12px;
+        margin-top: 16px;
+      }
+
+      .helpdesk-info .helpdesk-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #92400e;
+        margin-bottom: 4px;
+      }
+
+      .helpdesk-info p {
+        font-size: 11px;
+        color: #92400e;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .portal-layout {
+        display: flex;
+        gap: 24px;
+        margin-top: 24px;
+        align-items: flex-start;
+        width: 100%;
+      }
+
+      .catalog-results-area {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      .stream-meta-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: var(--secondary-color, #4a5568);
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .stream-meta-info strong {
+        color: #1e293b;
+      }
+
+      .stream-meta-info .live-dot {
+        color: #2f855a;
+        font-weight: 600;
+      }
+
+      .catalog-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+      }
+
+      .catalog-course-card {
+        background: #ffffff;
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-radius: 8px;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        min-height: 280px;
+        text-align: left;
+      }
+
+      .card-top-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .card-top-meta .meta-left {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      .course-tag-id {
+        color: #2b6cb0;
+        text-transform: uppercase;
+      }
+
+      .course-tag-dept {
+        color: var(--secondary-color, #4a5568);
+        font-weight: 600;
+      }
+
+      .course-tag-credits {
+        background-color: #f1f5f9;
+        color: var(--secondary-color, #4a5568);
+        padding: 2px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+
+      .catalog-course-card h3 {
+        font-size: 17px;
+        color: var(--primary-color, #1a365d);
+        font-weight: 700;
+        margin-top: 4px;
+        margin-bottom: 8px;
+        line-height: 1.3;
+        word-break: break-word;
+      }
+
+      .professor-line {
+        font-size: 13px;
+        color: #2d3748;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .professor-line span {
+        color: var(--secondary-color, #4a5568);
+      }
+
+      .inner-schedule-box {
+        background-color: #f8fafc;
+        border-radius: 6px;
+        padding: 12px;
+        font-size: 12px;
+        color: #4a5568;
+        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .inner-schedule-box div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .prereq-status-banner {
+        font-size: 11px;
+        font-weight: 700;
+        color: #92400e;
+        background-color: #fef3c7;
+        padding: 6px 10px;
+        border-radius: 4px;
+        margin-bottom: 14px;
+        display: inline-block;
+        line-height: 1.4;
+        word-break: break-word;
+      }
+
+      .prereq-status-banner.clear {
+        color: #166534;
+        background-color: #dcfce7;
+      }
+
+      .card-action-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+      }
+
+      .seats-indicator {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--secondary-color, #4a5568);
+      }
+
+      .seats-indicator strong {
+        color: #2d3748;
+        font-size: 15px;
+      }
+
+      .btn-card-register {
+        background-color: var(--primary-color, #1a365d);
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .btn-card-register:hover {
+        background-color: #102244;
+      }
+
+      .top-action-controls {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+
+      .btn-secondary-outline {
+        background: white;
+        border: 1px solid var(--border-color, #e2e8f0);
+        color: var(--secondary-color, #4a5568);
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-family: inherit;
+      }
+
+      .btn-secondary-outline:hover {
+        background: #f8fafc;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        align-items: stretch;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      .search-row .search-input-wrap {
+        flex: 1 1 300px;
+        min-width: 0;
+      }
+
+      .search-row .search-input-wrap input {
+        width: 100%;
+        font-weight: 600;
+        padding: 12px 14px;
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .search-row .search-controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .search-row .search-controls select {
+        padding: 0 16px;
+        background-color: white;
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-radius: 6px;
+        font-size: 13px;
+        font-family: inherit;
+        font-weight: 600;
+        color: #334155;
+        min-height: 46px;
+      }
+
+      .active-filter-chips {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      .active-filter-chips .chips-label {
+        color: var(--secondary-color, #4a5568);
+        font-weight: 700;
+        margin-right: 4px;
+      }
+
+      .filter-chip {
+        background: #edf2f7;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #4a5568;
+        white-space: nowrap;
+      }
+
+      .filter-chip.gold {
+        border: 1px solid #b45309;
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+
+      .page-title-block {
+        margin-bottom: 24px;
+      }
+
+      .page-title-block .eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--secondary-color, #4a5568);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+
+      .page-title-block h1 {
+        font-size: clamp(1.25rem, 4vw, 1.75rem);
+        color: var(--primary-color, #1a365d);
+        font-weight: 700;
+        line-height: 1.25;
+        word-break: break-word;
+      }
+
+      .page-title-block p {
+        color: var(--secondary-color, #4a5568);
+        font-size: 14px;
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 1024px) {
+        .portal-layout {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .refine-sidebar {
+          width: 100%;
+        }
+
+        .refine-sidebar .filter-checkbox-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 4px 16px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          gap: 12px;
+          padding: 14px 20px !important;
+        }
+
+        .portal-nav-tabs {
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 4px;
+          flex-wrap: nowrap !important;
+        }
+
+        .portal-nav-tabs .nav-tab-item {
+          white-space: nowrap;
+        }
+
+        .navbar > div:last-child {
+          text-align: left !important;
+          width: 100%;
+        }
+
+        .navbar > div:last-child div {
+          text-align: left !important;
+        }
+
+        .main-content {
+          padding: 20px 16px !important;
+        }
+
+        .top-action-controls {
+          justify-content: stretch;
+          flex-direction: column;
+        }
+
+        .top-action-controls button {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .catalog-cards-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .search-row {
+          flex-direction: column;
+        }
+
+        .search-row .search-controls {
+          width: 100%;
+        }
+
+        .search-row .search-controls select,
+        .search-row .search-controls button {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-content {
+          padding: 16px 12px !important;
+        }
+
+        .page-title-block h1 {
+          font-size: 1.15rem;
+        }
+
+        .page-title-block p {
+          font-size: 13px;
+        }
+
+        .catalog-course-card {
+          padding: 18px;
+          min-height: auto;
+        }
+
+        .catalog-course-card h3 {
+          font-size: 15px;
+        }
+
+        .card-action-footer {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+        }
+
+        .card-action-footer .btn-card-register {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .seats-indicator {
+          text-align: left;
+        }
+
+        .refine-sidebar {
+          padding: 16px;
+        }
+
+        .stream-meta-info {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .filter-chip {
+          font-size: 11px;
+          padding: 3px 8px;
+        }
+
+        .course-tag-credits {
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+        <div class="navbar">
+        <div class="portal-brand-block">
+            <svg viewBox="0 0 24 24" aria-label="STAR University logo">
+                <defs>
+                    <linearGradient id="blue-3d-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#93c5fd" />
+                        <stop offset="30%" stop-color="#2563eb" />
+                        <stop offset="70%" stop-color="#1e40af" />
+                        <stop offset="100%" stop-color="#1e3a8a" />
+                    </linearGradient>
+                </defs>
+                <path fill="url(#blue-3d-gradient)" d="M12,3L1,9L12,15L21,9M19,11.41V17.5C19,18.36 15.87,19 12,19C8.13,19 5,18.36 5,17.5V11.41L12,15.22L19,11.41Z"/>
+            </svg>
+            <div>
+                <div>STAR UNIVERSITY</div>
+                <div>Student Portal Gateway</div>
+            </div>
+        </div>
+
+        <div class="portal-nav-tabs">
+            <a href="student-dashboard.html" class="nav-tab-item">Dashboard</a>
+            <a href="course-search.html" class="nav-tab-item active">Course Search</a>
+            <a href="course-registration.html" class="nav-tab-item">Course Registration</a>
+            <a href="registration-status.html" class="nav-tab-item">Registration Status</a>
+        </div>
+
+        <!-- THE DYNAMIC USER INFO -->
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="text-align: right;">
+                <div id="nav-student-name">Loading...</div>
+                <div id="nav-student-id">...</div>
+            </div>
+            <button id="logout-btn" style="background: transparent; border: 1px solid #cbd5e1; color: #64748b; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                Logout
+            </button>
+        </div>
+    </div>
+    <div class="main-content">
+      <div
+        class="pill-group"
+        style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap"
+      >
+        <div class="meta-pill pill-blue">Academic Course Catalog</div>
+        <div
+          class="meta-pill pill-gold"
+          style="background-color: #fef3c7; color: #92400e"
+        >
+          ● Fall 2026 Term
+        </div>
+      </div>
+
+      <div class="page-title-block">
+        <div class="eyebrow">Office of the University Registrar</div>
+        <h1>University Course Catalog — Fall 2026</h1>
+        <p>
+          Explore active course offerings, syllabus prerequisites, cross-listed
+          sections, and real-time seat allocations.
+        </p>
+      </div>
+
+      <div class="top-action-controls">
+        <button class="btn-secondary-outline">📄 PDF Syllabus Guide</button>
+        <button
+          class="btn-secondary-outline"
+          style="background-color: #1a365d; color: white; border-color: #1a365d"
+        >
+          📁 Saved Courses (3)
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <input
+            type="text"
+            id="search-bar"
+            placeholder="Search catalog or course code..."
+          />
+        </div>
+        <div class="search-controls">
+          <select>
+            <option>Sort: Course Code (Asc)</option>
+          </select>
+          <button
+            class="btn-secondary-outline"
+            style="
+              background-color: #1a365d;
+              color: white;
+              border-color: #1a365d;
+            "
+          >
+            ⚙ Filter Setup
+          </button>
+        </div>
+      </div>
+
+      <div class="active-filter-chips">
+        <span class="chips-label">Active Filters:</span>
+        <div class="filter-chip">Undergraduate</div>
+        <div class="filter-chip">Computer Science &amp; Math</div>
+        <div class="filter-chip gold">Open Seats Only</div>
+        <div class="filter-chip">In-Person &amp; Hybrid</div>
+      </div>
+
+      <div class="portal-layout">
+        <div class="refine-sidebar">
+          <div class="sidebar-header">
+            <span>Refine Catalog</span>
+            <a href="#">Clear All</a>
+          </div>
+
+          <div class="filter-block-section">
+            <div class="toggle-row">
+              <span class="toggle-label">Open Seats Only</span>
+              <div class="toggle-switch" id="open-seats-toggle"></div>
+            </div>
+            <div class="filter-subtext">Hide full or closed sections</div>
+          </div>
+
+          <div class="filter-block-section">
+            <div class="filter-title">Academic Department</div>
+            <div class="filter-checkbox-grid">
+              <label
+                ><input type="checkbox" checked /> Computer Science &amp;
+                AI</label
+              >
+              <label
+                ><input type="checkbox" checked /> Mathematics &amp;
+                Stats</label
+              >
+              <label><input type="checkbox" /> Electrical Engineering</label>
+              <label><input type="checkbox" /> Physics &amp; Astronomy</label>
+              <label><input type="checkbox" /> Humanities &amp; Writing</label>
+              <label><input type="checkbox" /> Business Analytics</label>
+            </div>
+          </div>
+          <div class="helpdesk-info">
+            <div class="helpdesk-title">⚠️ Prerequisite Clearance</div>
+            <p>
+              Need an override or transferred credits recognized? Contact
+              academic advising before August 22nd.
+            </p>
+          </div>
+        </div>
+
+        <div class="catalog-results-area">
+          <div class="stream-meta-info">
+            <div id="results-count"><strong>Loading...</strong> Results</div>
+            <div class="live-dot">● Real-time seat reservations syncing</div>
+          </div>
+
+          <!-- The container for the cards -->
+          <div class="catalog-cards-grid" id="courses-container">
+            <!-- Firebase will load all cards here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./course-search.js"></script>
+  </body>
+</html>

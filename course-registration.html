@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>STAR UNIVERSITY - Course Registration Profile</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ===== PAGE-SPECIFIC RESPONSIVE STYLES ===== */
+        .breadcrumb-row { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 13px; flex-wrap: wrap; }
+        .breadcrumb-row .sep { color: var(--secondary-color); font-weight: 500; font-family: monospace; }
+        .breadcrumb-row .back-link { color: var(--accent-color); font-weight: 600; text-decoration: none; }
+        .breadcrumb-row .breadcrumb-mid { color: var(--secondary-color); font-weight: 500; }
+        .breadcrumb-row strong { color: var(--primary-color); font-weight: 700; }
+
+        .hero-banner { display: flex; flex-direction: row; justify-content: space-between; align-items: center; min-height: auto; padding: 32px; margin-bottom: 32px; width: 100%; gap: 24px; flex-wrap: wrap; background-color: #1a365d !important; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .hero-banner .hero-left { flex: 1 1 300px; min-width: 0; text-align: left; }
+        .hero-banner .hero-badge { background: rgba(255, 255, 255, 0.15); color: #ffffff; display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.4; }
+        .hero-banner h3 { color: #ffffff !important; font-size: clamp(1.15rem, 4vw, 1.625rem); font-weight: 700; margin-top: 14px; margin-bottom: 6px; line-height: 1.2; }
+        .hero-banner .hero-desc { color: #cbd5e0 !important; font-size: 13px; margin-top: 4px; line-height: 1.5; }
+        
+        .hero-banner .seats-card { background: rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); min-width: 0; flex: 0 1 240px; text-align: left; }
+        .hero-banner .seats-card h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #fef3c7 !important; margin-bottom: 8px; }
+        .hero-banner .seats-number-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+        .hero-banner .seats-big { font-size: 32px; font-weight: 800; color: #ffffff !important; line-height: 1; }
+        .hero-banner .seats-small { font-size: 14px; color: #94a3b8 !important; font-weight: 600; }
+        .hero-banner .seats-waitlist { font-size: 11px; color: #cbd5e0 !important; font-weight: 600; }
+
+        .prereq-stack { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; width: 100%; }
+        .prereq-box { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .prereq-box.green { background-color: #f0fdf4; border-color: #bbf7d0; }
+        .prereq-box.yellow { background-color: #fffbeb; border-color: #fef3c7; }
+        .prereq-info { display: flex; align-items: flex-start; gap: 16px; flex: 1 1 300px; min-width: 0; }
+        .prereq-info .icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
+        .prereq-info strong { font-size: 14px; font-weight: 700; display: block; line-height: 1.3; word-break: break-word; }
+        .prereq-info p { margin-top: 4px; font-size: 12px; font-weight: 500; line-height: 1.4; }
+        .prereq-box.green .prereq-info strong, .prereq-box.green .prereq-info p { color: #166534; }
+        .prereq-box.yellow .prereq-info strong { color: #92400e; }
+        .prereq-box.yellow .prereq-info p { color: #718096; }
+        .status-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
+
+        .detail-split { display: flex; flex-direction: row; gap: 32px; align-items: flex-start; width: 100%; margin-top: 32px; flex-wrap: wrap; }
+        .detail-left { flex: 2 1 350px; min-width: 0; display: flex; flex-direction: column; gap: 24px; text-align: left; }
+        .detail-right { flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 24px; text-align: left; }
+
+        .info-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; width: 100%; min-width: 0; }
+        .info-card h4 { font-size: 14px; font-weight: 700; color: var(--primary-color); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; line-height: 1.3; word-break: break-word; }
+        .info-card .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+        .info-card .card-header-row h4 { margin: 0; border: none; padding: 0; }
+        .info-card .card-header-tag { background-color: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--secondary-color); white-space: nowrap; }
+
+        .schedule-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .schedule-grid > div { min-width: 0; }
+        .schedule-grid span.label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--secondary-color); display: block; margin-bottom: 4px; }
+        .schedule-grid strong { font-size: 14px; color: #1f2937; display: block; word-break: break-word; }
+        .schedule-grid p { font-size: 12px; color: var(--secondary-color); margin-top: 4px; line-height: 1.4; }
+
+        .modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .module-box { background-color: #f8fafc; border: 1px solid var(--border-color); padding: 14px; border-radius: 6px; min-width: 0; }
+        .module-box span.module-num { font-size: 11px; font-weight: 700; color: var(--accent-color); display: block; margin-bottom: 4px; }
+        .module-box strong { font-size: 13px; color: #1f2937; display: block; margin-bottom: 4px; line-height: 1.3; word-break: break-word; }
+        .module-box p { font-size: 12px; color: var(--secondary-color); line-height: 1.4; }
+
+        .lab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .lab-grid .lab-item { background-color: #f1f5f9; padding: 12px; border-radius: 6px; text-align: left; min-width: 0; }
+        .lab-grid .lab-item span { font-size: 11px; color: var(--secondary-color); font-weight: 600; display: block; margin-bottom: 2px; }
+        .lab-grid .lab-item strong { font-size: 14px; color: var(--primary-color); word-break: break-word; }
+
+        .form-select-wrapper { width: 100%; }
+        .form-select-wrapper select { width: 100%; background-color: #f8fafc; font-weight: 600; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit; color: #1f2937; }
+
+        .credit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; margin-bottom: 14px; }
+        .credit-grid > div { padding: 8px; border-radius: 4px; }
+        .credit-grid span { font-size: 11px; display: block; text-align: center; }
+        .credit-grid strong { font-size: 13px; display: block; margin-top: 2px; text-align: center; }
+
+        .faculty-detail-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+        .faculty-detail-list p { margin: 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        .faculty-detail-list p span { color: var(--secondary-color); }
+        .faculty-detail-list p strong { color: #1e293b; text-align: right; word-break: break-word; }
+
+        .room-card { margin-top: 16px; background-color: #0f172a; color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid var(--primary-color); text-align: left; width: 100%; }
+        .room-card .room-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
+        .room-card strong { font-size: 14px; display: block; margin-bottom: 8px; color: #ffffff; }
+        .room-card p { font-size: 12px; opacity: 0.8; border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 8px; margin: 0; color: #ffffff; line-height: 1.4; }
+
+        .conflict-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); width: 100%; flex-wrap: wrap; gap: 8px; }
+        .conflict-header .conflict-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .conflict-header h4 { margin: 0; border: none; padding: 0; }
+        .conflict-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; margin-bottom: 16px; }
+        .conflict-cell { padding: 12px; border-radius: 6px; border-left: 4px solid var(--secondary-color); min-width: 0; }
+        .conflict-cell.light { background-color: #edf2f7; }
+        .conflict-cell.dark { background-color: #1a365d; color: #ffffff; border-left-color: var(--text-gold); }
+        .conflict-cell .cell-tag { font-size: 11px; font-weight: 700; color: var(--secondary-color); display: block; text-align: left; line-height: 1.3; word-break: break-word; }
+        .conflict-cell.dark .cell-tag { color: #fef3c7; text-transform: uppercase; }
+        .conflict-cell strong { font-size: 13px; color: #1f2937; display: block; margin-top: 2px; line-height: 1.3; word-break: break-word; }
+        .conflict-cell.dark strong { color: #ffffff; }
+        .conflict-cell .cell-sub { font-size: 11px; color: #cbd5e0; display: block; margin-top: 2px; }
+
+        .action-footer { background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; width: 100%; gap: 16px; flex-wrap: wrap; text-align: left; }
+        .action-footer .footer-info { display: flex; align-items: center; gap: 16px; flex: 1 1 300px; min-width: 0; }
+        .action-footer .footer-info .icon { font-size: 24px; line-height: 1; flex-shrink: 0; }
+        .action-footer .footer-info strong { font-size: 15px; color: #166534; display: block; line-height: 1.3; word-break: break-word; }
+        .action-footer .footer-info p { font-size: 13px; color: #166534; margin-top: 4px; line-height: 1.4; font-weight: 500; word-break: break-word; }
+        .action-footer .footer-buttons { display: flex; gap: 12px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+
+        @media (max-width: 900px) {
+            .schedule-grid { grid-template-columns: 1fr 1fr; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .lab-grid { grid-template-columns: 1fr 1fr; }
+            .conflict-row { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 700px) {
+            .hero-banner { padding: 20px; }
+            .hero-banner .seats-card { flex: 1 1 100%; min-width: 0; }
+            .detail-split { flex-direction: column; }
+            .detail-left, .detail-right { flex: 1 1 100%; min-width: 0; }
+            .schedule-grid { grid-template-columns: 1fr; }
+            .lab-grid { grid-template-columns: 1fr; }
+            .conflict-row { grid-template-columns: 1fr; }
+            .credit-grid { grid-template-columns: repeat(3, 1fr); }
+            .action-footer { flex-direction: column; align-items: flex-start; }
+            .action-footer .footer-buttons { width: 100%; justify-content: flex-start; }
+        }
+        @media (max-width: 480px) {
+            .breadcrumb-row { font-size: 12px; }
+            .hero-banner { padding: 16px; }
+            .prereq-box { padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+            .status-pill { align-self: flex-start; }
+            .info-card { padding: 16px; }
+            .credit-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .credit-grid span { font-size: 10px; }
+            .credit-grid strong { font-size: 12px; }
+            .action-footer { padding: 16px; }
+            .action-footer .footer-info .icon { font-size: 20px; }
+            .action-footer .footer-info strong { font-size: 13px; }
+            .action-footer .footer-info p { font-size: 12px; }
+            .action-footer .footer-buttons { flex-direction: column; align-items: stretch; }
+            .action-footer .footer-buttons button { width: 100%; justify-content: center; }
+        }
+        @media (max-width: 360px) {
+            .hero-banner h3 { font-size: 1.05rem; }
+            .hero-banner .seats-big { font-size: 26px; }
+            .conflict-header { flex-direction: column; align-items: flex-start; }
+            .status-pill { font-size: 10px; padding: 3px 8px; }
+        }
+    </style>
+</head>
+<body>
+
+        <div class="navbar">
+        <div class="portal-brand-block">
+            <svg viewBox="0 0 24 24" aria-label="STAR University logo">
+                <defs>
+                    <linearGradient id="blue-3d-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#93c5fd" />
+                        <stop offset="30%" stop-color="#2563eb" />
+                        <stop offset="70%" stop-color="#1e40af" />
+                        <stop offset="100%" stop-color="#1e3a8a" />
+                    </linearGradient>
+                </defs>
+                <path fill="url(#blue-3d-gradient)" d="M12,3L1,9L12,15L21,9M19,11.41V17.5C19,18.36 15.87,19 12,19C8.13,19 5,18.36 5,17.5V11.41L12,15.22L19,11.41Z"/>
+            </svg>
+            <div>
+                <div>STAR UNIVERSITY</div>
+                <div>Student Portal Gateway</div>
+            </div>
+        </div>
+
+        <div class="portal-nav-tabs">
+            <a href="student-dashboard.html" class="nav-tab-item">Dashboard</a>
+            <a href="course-search.html" class="nav-tab-item ">Course Search</a>
+            <a href="course-registration.html" class="nav-tab-item active">Course Registration</a>
+            <a href="registration-status.html" class="nav-tab-item">Registration Status</a>
+        </div>
+
+        <!-- THE DYNAMIC USER INFO -->
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="text-align: right;">
+                <div id="nav-student-name">Loading...</div>
+                <div id="nav-student-id">...</div>
+            </div>
+            <button id="logout-btn" style="background: transparent; border: 1px solid #cbd5e1; color: #64748b; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="breadcrumb-row">
+            <a href="course-search.html" class="back-link">📁 Catalog</a>
+            <span class="sep">&gt;</span>
+            <span class="breadcrumb-mid" id="dyn-dept-crumb">Course Stream</span>
+            <span class="sep">&gt;</span>
+            <strong id="dyn-crumb-code">Course Registration</strong>
+        </div>
+
+        <div class="hero-banner">
+            <div class="hero-left">
+                <span class="hero-badge" id="dyn-badge">UPPER DIVISION ELECTIVE • Section 01</span>
+                <h3 id="dyn-title">Loading...</h3>
+                <p class="hero-desc" id="dyn-desc">Loading...</p>
+            </div>
+
+            <div class="seats-card">
+                <h4>REGISTRATION CAPACITY</h4>
+                <div class="seats-number-row">
+                    <span class="seats-big" id="dyn-seats-open">0</span>
+                    <span class="seats-small" id="dyn-seats-total">/ 0 enrolled</span>
+                </div>
+                <div class="seats-waitlist">⏳ 0 Active Waitlist Requests</div>
+            </div>
+        </div>
+
+        <div class="prereq-stack">
+            <div class="prereq-box green">
+                <div class="prereq-info">
+                    <span class="icon">🟢</span>
+                    <div>
+                        <strong id="dyn-prereq-text">Loading Prerequisites...</strong>
+                        <p>Registrar Record Verified</p>
+                    </div>
+                </div>
+                <span class="status-pill" style="background-color:#dcfce7; color:#166534;">CLEARED</span>
+            </div>
+
+            <div class="prereq-box yellow">
+                <div class="prereq-info">
+                    <span class="icon">🟡</span>
+                    <div>
+                        <strong>Academic Advisor Sequence Authorization</strong>
+                        <p>Approved for accelerated sequence progression (Advising Case #ADV-59214).</p>
+                    </div>
+                </div>
+                <span class="status-pill" style="background-color:#fef3c7; color:#92400e;">AUTHORIZATION ACTIVE</span>
+            </div>
+        </div>
+
+        <div class="detail-split">
+
+            <div class="detail-left">
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <h4>📂 Class Schedule &amp; Delivery</h4>
+                        <span class="card-header-tag">Lecture &amp; Lab Combined</span>
+                    </div>
+
+                    <div class="schedule-grid">
+                        <div>
+                            <span class="label">Meeting Times</span>
+                            <strong id="dyn-schedule">TBA</strong>
+                            <p>75 Min Interactive Sessions</p>
+                        </div>
+                        <div>
+                            <span class="label">Faculty &amp; Room</span>
+                            <strong id="dyn-room">TBA</strong>
+                            <p>Compute Cluster 4</p>
+                        </div>
+                        <div>
+                            <span class="label">Instructional Mode</span>
+                            <strong>In-Person Lecture</strong>
+                            <p>Synchronous GPU Workstations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h4>Course Description &amp; Scope</h4>
+                    <p style="font-size:14px; color:#4a5568; line-height:1.6;">
+                        This course explores modern architectural foundations, theoretical mechanics, and practical implementations relevant to the <span id="dyn-desc-title" style="font-weight:bold;">subject</span>. Students develop working foundational implementations, optimize multi-layered models, and critique modern research behaviour.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <h4>Curriculum Outline &amp; Weekly Modules</h4>
+                    <div class="modules-grid">
+                        <div class="module-box">
+                            <span class="module-num">Module 01</span>
+                            <strong>Foundational Principles</strong>
+                            <p>Core theoretical concepts, introductory calculus, and standard paradigms.</p>
+                        </div>
+                        <div class="module-box">
+                            <span class="module-num">Module 02</span>
+                            <strong>Applied Architectures</strong>
+                            <p>Practical implementation, feature engineering, and optimization techniques.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-right">
+
+                <div class="info-card">
+                    <h4>Grade Mode &amp; Credits</h4>
+                    <div class="form-select-wrapper">
+                        <select class="form-control">
+                            <option>Standard Letter Grade (A–F) - Required for Major</option>
+                            <option>Audit Option (No Credit Awarded)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h4>Instructional Faculty</h4>
+                    <div class="security-info" style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                        <span style="font-size:24px; background-color:#f1f5f9; padding:6px; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">👨‍🏫</span>
+                        <div style="min-width:0;">
+                            <strong style="font-size:14px; color:var(--primary-color); display:block;" id="dyn-instructor">Loading...</strong>
+                            <p style="font-size:12px; color:var(--secondary-color); margin:0;">Faculty Member</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-label">Instructional Space</div>
+                    <strong id="dyn-room-card">TBA</strong>
+                    <p>Equipped with modern learning facilities &amp; high-speed fiber link</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card" style="margin-top:32px; margin-bottom:32px;">
+            <h4>💵 Tuition Assessment: Flat-Rate Band Enforced</h4>
+            <p style="font-size:13px; color:#4a5568; line-height:1.5; margin:0;">
+                This registration qualifies under the <strong>Full-Time Undergraduate Tier (12.0-19.0 credits)</strong>. A <strong>R0.00 supplemental surcharge</strong> will be added to your Fall 2026 student account ledger.
+            </p>
+        </div>
+
+        <div class="action-footer">
+            <div class="footer-info">
+                <span class="icon">🔒</span>
+                <div>
+                    <strong>Profile Complete &amp; Enrollment Authorized</strong>
+                    <p>Clicking confirm below will append <span id="dyn-code-footer">this course</span> to your official academic timeline roster registry instantly.</p>
+                </div>
+            </div>
+
+            <div class="footer-buttons">
+                <button class="btn-secondary-outline" onclick="window.location.href='course-search.html'"
+                        style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; padding:10px 20px; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
+                    Cancel
+                </button>
+                <button class="btn-primary" id="finalize-enrollment-btn"
+                        style="background-color:#166534; color:#ffffff; border:none; padding:10px 22px; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
+                    Confirm Registration
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-footer">
+        <div>© 2026 Star University, Chartered Higher Education Institution. All rights reserved.</div>
+        <div class="footer-right">
+            <span>Institutional Accreditation Board (IAB) Certified</span>
+            <span>Academic Integrity Registry</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module" src="./registration.js"></script>
+</body>
+</html>

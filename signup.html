@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>STAR UNIVERSITY - Student Portal Registration</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ===== PAGE-SPECIFIC LAYOUT ===== */
+        body {
+            background-color: #f8fafc;
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Global Top Header - Aligned to match the container below */
+        .global-header-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 20px 24px;
+        }
+        
+        .global-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .global-header svg {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+        
+        .header-titles h1 {
+            margin: 0;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #1a365d;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .header-titles p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Split Container */
+        .split-registration-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            min-height: 800px;
+        }
+
+        /* Left Column: Branding */
+        .info-brand-column {
+            width: 40%;
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 64px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .brand-meta-badge {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            text-transform: uppercase;
+            color: #cbd5e1;
+        }
+
+        .brand-main-title h2 {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.15;
+            color: #ffffff;
+            margin: 24px 0 16px;
+        }
+
+        .brand-main-title p {
+            font-size: 15px;
+            color: #94a3b8;
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        .sidebar-image-card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-caption-row {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .validation-match-box {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 32px;
+            margin-top: 48px;
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Right Column: Form */
+        .form-interactive-column {
+            width: 60%;
+            padding: 64px;
+            background-color: #ffffff;
+            overflow-y: auto;
+        }
+
+        .form-scroller-box {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .protocol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .protocol-lbl {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #b45309;
+            text-transform: uppercase;
+        }
+
+        .window-open-lbl {
+            font-size: 12px;
+            color: #2f855a;
+            font-weight: 600;
+        }
+
+        .form-interactive-column h1 {
+            font-size: 32px;
+            color: #0f172a;
+            font-weight: 800;
+            margin: 0 0 8px;
+        }
+
+        .form-interactive-column p.subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin: 0 0 32px;
+        }
+
+        /* Wizard Steps */
+        .wizard-steps-indicator {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 32px;
+            font-size: 13px;
+        }
+
+        .step-tab {
+            padding-bottom: 12px;
+            margin-bottom: -1px;
+            font-weight: 700;
+            color: #94a3b8;
+            flex: 1;
+        }
+
+        .step-tab.active {
+            color: #1a365d;
+            border-bottom: 2px solid #1a365d;
+        }
+
+        /* Info Box */
+        .registry-crosscheck-box {
+            background-color: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .crosscheck-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #115e59;
+            margin-bottom: 4px;
+        }
+
+        .crosscheck-desc {
+            font-size: 13px;
+            color: #134e4a;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Form Layout */
+        .dual-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-inline-icon {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1e293b;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .form-control-with-icon {
+            padding-left: 44px;
+        }
+
+        .example-text {
+            margin: 6px 0 0;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        /* Checkbox */
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            margin-top: 4px;
+            width: 16px;
+            height: 16px;
+            accent-color: #1a365d;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #1a365d;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .btn-submit:hover {
+            background-color: #102244;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .login-link-row {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .login-link-row a {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .login-link-row a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-certifications-row {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 24px;
+            margin-top: 48px;
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .split-registration-container {
+                flex-direction: column;
+                margin: 20px;
+                border-radius: 12px;
+            }
+            .info-brand-column {
+                width: 100%;
+                padding: 48px;
+            }
+            .sidebar-image-card {
+                display: none;
+            }
+            .form-interactive-column {
+                width: 100%;
+                padding: 48px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-interactive-column {
+                padding: 32px 20px;
+            }
+            .dual-form-row {
+                grid-template-columns: 1fr;
+            }
+            .info-brand-column {
+                padding: 32px 20px;
+            }
+            .wizard-steps-indicator {
+                font-size: 11px;
+            }
+            .global-header-wrapper {
+                padding: 24px 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Header (Now aligned left) -->
+    <div class="global-header-wrapper">
+        <div class="global-header">
+            <svg viewBox="0 0 24 24" aria-label="STAR University logo">
+                <defs>
+                    <linearGradient id="blue-3d-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#93c5fd" />
+                        <stop offset="30%" stop-color="#2563eb" />
+                        <stop offset="70%" stop-color="#1e40af" />
+                        <stop offset="100%" stop-color="#1e3a8a" />
+                    </linearGradient>
+                </defs>
+                <path fill="url(#blue-3d-gradient)" d="M12,3L1,9L12,15L21,9M19,11.41V17.5C19,18.36 15.87,19 12,19C8.13,19 5,18.36 5,17.5V11.41L12,15.22L19,11.41Z" />
+            </svg>
+            <div class="header-titles">
+                <h1>STAR University</h1>
+                <p>Office of the University Registrar • Institutional Portal</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="split-registration-container">
+        
+        <!-- Left Branding Column -->
+        <div class="info-brand-column">
+            <div>
+                <div class="brand-meta-badge">Official Admissions Protocol</div>
+                <div class="brand-main-title">
+                    <h2>Begin Your<br>Academic Journey</h2>
+                    <p>Create your digital academic identity for Fall 2026 registration and matriculation.</p>
+                </div>
+                <div class="sidebar-image-card">
+                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1000&auto=format&fit=crop" alt="University Campus">
+                    <div class="image-caption-row">
+                        <span>Star University Main Campus</span>
+                        <span>Est. 1998</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="validation-match-box">
+                    <span style="font-size: 20px;">🔄</span>
+                    <div>
+                        <strong style="font-size: 13px; color: #ffffff; display: block; margin-bottom: 4px;">Roster Validation Match</strong>
+                        <p style="font-size: 12px; color: #94a3b8; line-height: 1.4; margin: 0;">Your submitted Student ID will be authenticated in real-time against the certified Registrar acceptance list.</p>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #64748b; font-weight: 600; margin-top: 32px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Accredited Faculty Board • ISO/IEC 27001 Certified
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Form Column -->
+        <div class="form-interactive-column">
+            <div class="form-scroller-box">
+                
+                <div class="protocol-header">
+                    <span class="protocol-lbl">Admissions Protocol</span>
+                    <span class="window-open-lbl">● Fall 2026 Window Open</span>
+                </div>
+
+                <h1>Student Portal Registration</h1>
+                <p class="subtitle">Create your digital academic identity for Fall 2026 registration and matriculation.</p>
+
+                
+                <div class="registry-crosscheck-box">
+                    <span style="font-size: 18px;">ℹ️</span>
+                    <div>
+                        <div class="crosscheck-title">Institutional Registry Crosscheck</div>
+                        <p class="crosscheck-desc">Your Student ID must match the identification assigned on your formal Star University letter of acceptance.</p>
+                    </div>
+                </div>
+
+                <form id="portal-registration-form">
+                    
+                    <div class="dual-form-row">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input type="text" id="fullname" class="form-control" placeholder="Full Name" required>
+                            </div>
+                            <p class="example-text">As written on passport or national ID</p>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input type="text" id="reference" class="form-control" placeholder="Reference Number" required>
+                            </div>
+                            <p class="example-text">Found on Registrar acceptance letter</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <span class="input-inline-icon">✉️</span>
+                            <input type="email" id="email" class="form-control form-control-with-icon" placeholder="Official University Email" required>
+                        </div>
+                        <p class="example-text">Activation link and two-factor code will be dispatched here</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <select id="department" class="form-control" style="font-weight: 500; cursor: pointer;" required>
+                            <option value="" disabled selected>Select Academic Department / Faculty</option>
+                            <option value="cs">Faculty of Computer Science & AI</option>
+                            <option value="math">Department of Mathematics & Statistics</option>
+                            <option value="eng">School of Engineering Sciences</option>
+                            <option value="bus">Graduate School of Business Analytics</option>
+                        </select>
+                    </div>
+
+                    <div class="dual-form-row">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input type="password" id="password" class="form-control" placeholder="Create Password" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input type="password" id="confirm-password" class="form-control" placeholder="Confirm Password" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 32px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms" required>
+                            <span>I solemnly agree to uphold the <strong>Star University Honor Code</strong>, follow institutional digital security regulations, and verify that all registered credentials correspond directly to my formal admission.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="signup-btn" class="btn-submit">
+                        Register Account
+                    </button>
+                </form>
+                
+                <div class="login-link-row">
+                    Already completed your matriculation registration? <a href="../login.html">Return to Login ➔</a>
+                </div>
+                
+                <div class="footer-certifications-row">
+                    <div>Institutional Accreditation Board Registered</div>
+                    <div>University Registrar Security Network</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./signup.js"></script>
+</body>
+</html>

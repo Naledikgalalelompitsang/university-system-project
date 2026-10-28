@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>STAR UNIVERSITY - Administrative Authority Console</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== ADMIN WORKSPACE LAYOUT ===== */
+        .admin-viewport { min-height: 100vh; padding: 40px; background-color: #f8fafc; width: 100%; }
+        
+        /* Top Header Styles */
+        .admin-global-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 32px; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid #e2e8f0; 
+            flex-wrap: wrap; 
+            gap: 16px; 
+        }
+        
+        .header-left-group { display: flex; align-items: center; gap: 16px; }
+        
+        /* Logo Block */
+        .portal-brand-block { display: flex; align-items: center; gap: 12px; }
+        .portal-brand-block svg { width: 36px; height: 36px; flex-shrink: 0; }
+        .brand-text .brand-title { font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; }
+        .brand-text .brand-sub { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-top: 2px; line-height: 1.1; }
+        
+        .header-meta { border-left: 2px solid #cbd5e1; padding-left: 16px; margin-left: 8px; }
+        .header-meta .meta-line { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .header-meta h2 { font-size: 20px; color: #0f172a; font-weight: 800; margin-top: 2px; line-height: 1.3; }
+
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .user-info strong { font-size: 13px; color: #0f172a; display: block; }
+        .user-info span { font-size: 11px; color: #64748b; font-weight: 600; display: block; }
+        .user-avatar { width: 40px; height: 40px; background-color: #cbd5e1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        
+        .security-badge { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
+        .security-info { display: flex; align-items: flex-start; gap: 12px; flex: 1 1 300px; }
+        .security-info strong { font-size: 13px; color: #334155; display: block; }
+        .security-info p { font-size: 12px; color: #64748b; margin-top: 2px; line-height: 1.4; }
+        
+        .kpi-cards-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .kpi-card-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01); }
+        .kpi-card-panel.dark-alert { background-color: #0f172a; color: #ffffff; border-color: #0f172a; }
+        .kpi-title-meta { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .kpi-card-panel.dark-alert .kpi-title-meta { color: #94a3b8; }
+        .kpi-main-number { font-size: 32px; font-weight: 800; color: #1e293b; line-height: 1; }
+        .kpi-card-panel.dark-alert .kpi-main-number { color: #ffffff; }
+        .kpi-subtext-line { font-size: 12px; color: #64748b; margin-top: 8px; line-height: 1.4; }
+        .kpi-card-panel.dark-alert .kpi-subtext-line { color: #94a3b8; }
+        
+        .capacity-bar-housing { margin-top: 16px; }
+        .bar-label-row { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; }
+        .capacity-track-bg { width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .capacity-fill-prog { height: 100%; background-color: #1a365d; border-radius: 3px; }
+        
+        .alert-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; text-align: center; font-size: 11px; }
+        .alert-stat-item { background: rgba(255, 255, 255, 0.06); padding: 6px; border-radius: 4px; }
+        .alert-stat-item span { color: #94a3b8; display: block; margin-bottom: 2px; }
+        .alert-stat-item strong { font-size: 13px; color: #ffffff; }
+        
+        .control-split-row { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; margin-bottom: 32px; align-items: flex-start; }
+        .split-card-block { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; min-width: 0; }
+        .block-header-action-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .block-header-action-row h3 { font-size: 16px; color: #0f172a; font-weight: 700; }
+        
+        .category-pill-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; flex-wrap: wrap; }
+        .tab-pill-btn { background: none; border: none; padding: 6px 12px; font-size: 12px; font-weight: 700; color: #64748b; border-radius: 4px; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background 0.2s, color 0.2s; }
+        .tab-pill-btn.active { background-color: #edf2f7; color: #1a365d; }
+        .tab-pill-btn:hover:not(.active) { background-color: #f1f5f9; color: #1e293b; }
+        
+        .timeline-stream { display: flex; flex-direction: column; gap: 16px; }
+        .timeline-log-node { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+        .log-meta-top { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; flex-wrap: wrap; gap: 4px; }
+        .log-main-desc { font-size: 12px; color: #1e293b; font-weight: 600; line-height: 1.4; }
+        
+        .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .data-table-classic { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+        .data-table-classic thead th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; border-bottom: 1px solid #e2e8f0; white-space: nowrap; background: #f8fafc; }
+        .data-table-classic tbody td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        
+        .tag-course-code { display: inline-block; font-size: 11px; font-weight: 700; color: #2563eb; background: #eff6ff; padding: 1px 6px; border-radius: 4px; }
+        .tag-course-credits { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+        .meta-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+        .pill-green { background: #dcfce7; color: #166534; }
+        .pill-gold  { background: #fee2e2; color: #9b2c2c; }
+        .pill-blue  { background: #fef3c7; color: #b45309; }
+        
+        .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; transition: background 0.2s, box-shadow 0.2s; border: none; background: #2563eb; color: #ffffff; white-space: nowrap; }
+        .btn-primary:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .btn-secondary-outline { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; background: #ffffff; color: #334155; border: 1px solid #cbd5e1; white-space: nowrap; transition: background 0.2s, border-color 0.2s; }
+        .btn-secondary-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .back-link { color: #2563eb; text-decoration: none; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .pagination-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 12px; font-weight: 600; color: #64748b; flex-wrap: wrap; gap: 12px; }
+        .pagination-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .pagination-controls .page-num { padding: 4px 8px; border-radius: 4px; cursor: pointer; user-select: none; }
+        .pagination-controls .page-num:hover:not(.active) { background: #e2e8f0; }
+        .pagination-controls .page-num.active { background: #1a365d; color: white; }
+        
+        .page-footer { border-top: 1px solid #cbd5e1; background: #ffffff; padding: 20px 40px; margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; color: #64748b; }
+        .footer-right { display: flex; gap: 24px; flex-wrap: wrap; }
+
+        /* ===== ADD COURSE MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+        .modal-overlay.open { display: flex; }
+        .modal-dialog { background: #fff; border-radius: 12px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; border: 1px solid #e2e8f0; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid #e2e8f0; }
+        .modal-header h3 { font-size: 16px; color: #0f172a; font-weight: 700; margin: 0; }
+        .modal-close-btn { background: none; border: none; font-size: 22px; color: #64748b; cursor: pointer; padding: 2px 8px; border-radius: 6px; }
+        .modal-close-btn:hover { background: #f1f5f9; color: #0f172a; }
+        .modal-body { padding: 20px 24px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-row.single { grid-template-columns: 1fr; }
+        .form-field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 5px; }
+        .form-field label .req { color: #dc2626; }
+        .form-field input, .form-field select { width: 100%; padding: 9px 12px; font-size: 13px; font-family: inherit; color: #1e293b; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
+        .form-field input:focus, .form-field select:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 24px 18px; border-top: 1px solid #e2e8f0; }
+
+        @media (max-width: 1100px) { .admin-viewport { padding: 24px; } .kpi-cards-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .control-split-row { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) {
+            .admin-viewport { padding: 20px !important; overflow-x: hidden; }
+            .admin-global-header { flex-direction: column !important; align-items: flex-start !important; }
+            .header-left-group { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .header-meta { border-left: none; padding-left: 0; margin-left: 0; }
+            .header-right { width: 100%; justify-content: flex-start; flex-wrap: wrap; margin-top: 12px; }
+            .kpi-cards-row { grid-template-columns: 1fr !important; gap: 16px; }
+            .control-split-row { grid-template-columns: 1fr !important; gap: 20px; }
+            .security-badge { flex-direction: column; align-items: flex-start; }
+        }
+        @media (max-width: 640px) {
+            .admin-viewport { padding: 14px !important; }
+            .split-card-block, .kpi-card-panel { padding: 16px; }
+            .block-header-action-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .page-footer { flex-direction: column; text-align: center; padding: 16px 20px; }
+            .footer-right { flex-direction: column; gap: 6px; justify-content: center; }
+            .modal-overlay { padding: 0; align-items: flex-start; }
+            .modal-dialog { max-width: 100%; min-height: 100vh; border-radius: 0; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 400px) {
+            .kpi-main-number { font-size: 24px; }
+            .btn-primary, .btn-secondary-outline { font-size: 11px; padding: 0.4rem 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== MAIN VIEWPORT ===== -->
+<div class="admin-viewport">
+
+    <!-- Header with Logo moved inside -->
+    <div class="admin-global-header">
+        <div class="header-left-group">
+            
+            <!-- Logo -->
+            <div class="portal-brand-block">
+                <svg viewBox="0 0 24 24" aria-label="STAR University logo">
+                    <defs>
+                        <linearGradient id="blue-3d-gradient-admin" x1="0%" x2="100%" y1="0%" y2="100%">
+                            <stop offset="0%" stop-color="#93c5fd" />
+                            <stop offset="30%" stop-color="#2563eb" />
+                            <stop offset="70%" stop-color="#1e40af" />
+                            <stop offset="100%" stop-color="#1e3a8a" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12,3L1,9L12,15L21,9M19,11.41V17.5C19,18.36 15.87,19 12,19C8.13,19 5,18.36 5,17.5V11.41L12,15.22L19,11.41Z" fill="url(#blue-3d-gradient-admin)" />
+                </svg>
+                <div class="brand-text">
+                    <div class="brand-title">STAR UNIVERSITY</div>
+                    <div class="brand-sub">Administrative Authority</div>
+                </div>
+            </div>
+
+            <!-- Context Meta -->
+            <div class="header-meta">
+                <div class="meta-line">Registrar Office &bull; Admin Console</div>
+                <h2>Academic Term: Fall 2026 Regular Term</h2>
+            </div>
+
+        </div>
+        
+        <div class="header-right">
+            <div class="user-info" style="margin-right: 16px; text-align: right;">
+                <strong id="admin-name-display">Loading...</strong>
+                <span>Senior University Registrar</span>
+            </div>
+            <button id="admin-logout-btn" style="background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Logout</button>
+            <div class="user-avatar" style="margin-left: 12px;">👨‍💼</div>
+        </div>
+    </div>
+
+    <div class="security-badge">
+        <div class="security-info">
+            <span style="font-size:18px;">🔓</span>
+            <div>
+                <strong>Authority Clearance Room Active &bull; Portal Unlocked</strong>
+                <p>Real-time course section overrides, seat expansion tracks, and registry lock states are enabled under terminal profile token #REG-2026-09.</p>
+            </div>
+        </div>
+        <button class="btn-secondary-outline" id="export-census-btn">📊 Export Census</button>
+    </div>
+
+    <div class="kpi-cards-row">
+        <div class="kpi-card-panel">
+            <div class="kpi-title-meta">
+                <span>Total Enrolled Students</span>
+                <span style="color:#2f855a; background:#e6fffa; padding:2px 6px; border-radius:4px;">📈 Live</span>
+            </div>
+            <div class="kpi-main-number" id="total-students-count">0</div>
+            <p class="kpi-subtext-line">Active cohort registry</p>
+            <div class="capacity-bar-housing">
+                <div class="bar-label-row"><span>Cohort Capacity Hit</span><span>0%</span></div>
+                <div class="capacity-track-bg"><div class="capacity-fill-prog" style="width:0%;"></div></div>
+            </div>
+        </div>
+
+        <div class="kpi-card-panel">
+            <div class="kpi-title-meta">
+                <span>Active Sections &amp; Rooms</span>
+                <span style="color:#4a5568; background:#f1f5f9; padding:2px 6px; border-radius:4px;">🏫 Live</span>
+            </div>
+            <div class="kpi-main-number" id="total-courses-count">0 <span style="font-size:14px; font-weight:600; color:#64748b;">Sections</span></div>
+            <p class="kpi-subtext-line">Across all Academic Faculties</p>
+            <div class="capacity-bar-housing">
+                <div class="bar-label-row"><span>Facility Density Mapping</span><span>0%</span></div>
+                <div class="capacity-track-bg"><div class="capacity-fill-prog" style="width:0%; background-color:#3182ce;"></div></div>
+            </div>
+        </div>
+
+        <div class="kpi-card-panel dark-alert">
+            <div class="kpi-title-meta">
+                <span>Pending Interventions</span>
+                <span style="color:#fef3c7; background:#92400e; padding:2px 6px; border-radius:4px;">⚠️ Realtime</span>
+            </div>
+            <div class="kpi-main-number" style="color:#fca5a5;">0 <span style="font-size:14px; font-weight:600; color:#94a3b8;">Requests</span></div>
+            <p class="kpi-subtext-line">Academic overrides awaiting coordinator approval flags</p>
+            <div class="alert-stats-grid">
+                <div class="alert-stat-item"><span>Overrides</span><strong>0</strong></div>
+                <div class="alert-stat-item"><span>Capacity</span><strong>0</strong></div>
+                <div class="alert-stat-item"><span>Late Adds</span><strong>0</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-split-row">
+        <div class="split-card-block">
+            <div class="block-header-action-row">
+                <h3>Curricular Control: Manage Courses</h3>
+                <button class="btn-primary" id="add-course-btn">➕ Add New Course Section</button>
+            </div>
+
+            <div class="category-pill-tabs">
+                <button class="tab-pill-btn active" data-dept="all">All Sections</button>
+                <button class="tab-pill-btn" data-dept="cs">Computer Science</button>
+                <button class="tab-pill-btn" data-dept="math">Mathematics</button>
+                <button class="tab-pill-btn" data-dept="eng">Engineering</button>
+            </div>
+
+            <div class="table-scroll">
+                <table class="data-table-classic" id="courses-table">
+                    <thead>
+                        <tr>
+                            <th>CRN &amp; Code</th>
+                            <th>Section Title</th>
+                            <th>Dept</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Javascript will populate this table from Firebase -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="split-card-block">
+            <div class="block-header-action-row">
+                <h3>📜 Audit Trail</h3>
+                <span style="font-size:11px; font-weight:700; color:#ef4444; text-transform:uppercase;">● Real-Time</span>
+            </div>
+            <p style="font-size:12px; color:#64748b; margin-bottom:20px;">Chronological administrative overrides and event logging logs.</p>
+            <div class="timeline-stream" id="audit-trail-container">
+                <!-- Javascript will populate this audit log -->
+            </div>
+            <a href="#" id="vault-roster-link" style="display:block; text-align:center; font-size:13px; font-weight:700; color:#3182ce; text-decoration:none; margin-top:24px; padding-top:16px; border-top:1px solid #f1f5f9;">
+                Open Vault System Roster ➔
+            </a>
+        </div>
+    </div>
+
+    <div class="split-card-block">
+        <div class="block-header-action-row">
+            <div>
+                <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Cohort Governance Framework</div>
+                <h3>View Student Records &amp; Registration Actions</h3>
+            </div>
+        </div>
+
+        <div class="table-scroll">
+            <table class="data-table-classic" id="students-table">
+                <thead>
+                    <tr>
+                        <th>Student ID &amp; Profile</th>
+                        <th>Degree Program</th>
+                        <th>Credits</th>
+                        <th>GPA</th>
+                        <th>Hold Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="students-tbody">
+                    <!-- Javascript will populate this table -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-row">
+            <div id="pagination-status">Displaying 0 of 0 registered scholars</div>
+            <div class="pagination-controls" id="pagination-controls">
+                <button class="btn-secondary-outline" data-page="prev">Previous</button>
+                <span class="page-num active" data-page="1">1</span>
+                <button class="btn-secondary-outline" data-page="next">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <div>&copy; 2026 Star University, Administrative Registry Ledger. All rights reserved.</div>
+        <div class="footer-right">
+            <span>Institutional Accreditation Board (IAB) System Terminal</span>
+            <span>Security Encrypted Audit Log</span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== ADD COURSE SECTION MODAL ===== -->
+<div class="modal-overlay" id="add-course-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3>➕ Add New Course Section</h3>
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="add-course-form" novalidate>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="field-crn">CRN <span class="req">*</span></label>
+                        <input type="text" id="field-crn" placeholder="48921" maxlength="6" inputmode="numeric">
+                    </div>
+                    <div class="form-field">
+                        <label for="field-code">Course Code <span class="req">*</span></label>
+                        <input type="text" id="field-code" placeholder="CS-340">
+                    </div>
+                </div>
+
+                <div class="form-row single">
+                    <div class="form-field">
+                        <label for="field-title">Section Title <span class="req">*</span></label>
+                        <input type="text" id="field-title" placeholder="Deep Learning & Neural Arch">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="field-dept">Department <span class="req">*</span></label>
+                        <select id="field-dept">
+                            <option value="">— Select —</option>
+                            <option value="cs">Computer Science &amp; AI</option>
+                            <option value="math">Mathematics &amp; Stats</option>
+                            <option value="eng">Engineering</option>
+                            <option value="hum">Humanities</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="field-section">Section # <span class="req">*</span></label>
+                        <input type="text" id="field-section" placeholder="01">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="field-capacity">Capacity <span class="req">*</span></label>
+                        <input type="number" id="field-capacity" placeholder="45" min="1" max="999">
+                    </div>
+                    <div class="form-field">
+                        <label for="field-credits">Credits <span class="req">*</span></label>
+                        <input type="number" id="field-credits" placeholder="4" min="1" max="6" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="field-schedule">Schedule <span class="req">*</span></label>
+                        <input type="text" id="field-schedule" placeholder="MWF 10:30-11:45">
+                    </div>
+                    <div class="form-field">
+                        <label for="field-room">Room <span class="req">*</span></label>
+                        <input type="text" id="field-room" placeholder="Turing Hall 102">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-outline" id="modal-cancel-btn">Cancel</button>
+                <button type="submit" class="btn-primary">Save Section</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Link the JS File -->
+<script type="module" src="./admin-dashboard.js"></script>
+
+</body>
+</html>

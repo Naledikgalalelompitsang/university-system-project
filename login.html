@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>Star University - Identity Gateway</title>
+    <style>
+      /* ===== RESET & BASE ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        background: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.5;
+        color: #1e293b;
+      }
+
+      img,
+      svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .page-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .header-logo {
+        text-align: center;
+        margin-top: clamp(1rem, 5vw, 2.5rem);
+        padding: 0 1rem;
+        flex-shrink: 0;
+      }
+
+      .header-logo svg {
+        width: clamp(2.5rem, 10vw, 3.5rem);
+        height: auto;
+        margin: 0 auto 0.5rem;
+      }
+
+      .header-logo h1 {
+        margin: 0;
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #1a365d;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      .header-logo p {
+        margin: 0.4rem 0 0;
+        font-size: clamp(0.65rem, 2vw, 0.8rem);
+        color: #64748b;
+        line-height: 1.4;
+      }
+
+      .auth-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 0;
+        flex: 1 0 auto;
+      }
+
+      .auth-container {
+        width: 100%;
+        max-width: 520px;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: clamp(1.5rem, 5vw, 2.75rem);
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.06),
+          0 1px 4px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e2e8f0;
+        transition: padding 0.2s ease;
+      }
+
+      .building-circle {
+        width: clamp(3rem, 12vw, 4rem);
+        height: clamp(3rem, 12vw, 4rem);
+        border-radius: 50%;
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        border: 2px solid #bfdbfe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: #2563eb;
+        flex-shrink: 0;
+      }
+
+      .building-circle svg {
+        width: clamp(1.5rem, 6vw, 2rem);
+        height: clamp(1.5rem, 6vw, 2rem);
+      }
+
+      .access-tag {
+        text-align: center;
+        font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #b45309;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 999px;
+        padding: 0.3rem 1rem;
+        display: inline-block;
+        margin: 0 auto 1rem;
+        width: fit-content;
+        max-width: 100%;
+        word-break: break-word;
+      }
+
+      .auth-container h2 {
+        text-align: center;
+        font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+        color: #1a365d;
+        margin-bottom: 0.35rem;
+        font-weight: 700;
+        line-height: 1.3;
+        word-break: break-word;
+      }
+
+      .auth-container > p {
+        text-align: center;
+        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+        color: #718096;
+        margin-bottom: 1.75rem;
+        line-height: 1.4;
+      }
+
+      .tab-selector {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.75rem;
+        flex-wrap: wrap;
+      }
+
+      .tab-selector .btn-primary {
+        flex: 1 1 0;
+        min-width: 120px;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+        font-weight: 600;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: #f1f5f9;
+        color: #475569;
+      }
+
+      .tab-selector .btn-primary.active {
+        background: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      }
+
+      .tab-selector .btn-primary:hover:not(.active) {
+        background: #e2e8f0;
+        color: #1e293b;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .label-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.5rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .label-container label {
+        color: #4a5568;
+        font-weight: 500;
+        font-size: clamp(0.7rem, 2.2vw, 0.8rem);
+        line-height: 1.3;
+      }
+
+      .meta-right-text {
+        color: #718096;
+        font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .label-container a {
+        color: #b45309;
+        text-decoration: none;
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .label-container a:hover {
+        text-decoration: underline;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .input-wrapper:focus-within {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        background: #ffffff;
+      }
+
+      .input-wrapper.error {
+        border-color: #dc2626;
+        background: #fef2f2;
+      }
+
+      .input-wrapper.error:focus-within {
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+      }
+
+      .input-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 0.75rem;
+        color: #94a3b8;
+        flex-shrink: 0;
+      }
+
+      .input-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+        padding: 0.7rem 0.75rem 0.7rem 0.5rem;
+        border: none;
+        background: transparent;
+        font-size: clamp(0.8rem, 2.5vw, 0.875rem);
+        color: #1e293b;
+        outline: none;
+        font-family: inherit;
+        min-width: 0;
+      }
+
+      .input-wrapper input::placeholder {
+        color: #a0aec0;
+        font-size: clamp(0.7rem, 2.2vw, 0.8rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .field-error {
+        color: #dc2626;
+        font-size: 11px;
+        margin-top: 4px;
+        display: none;
+      }
+
+      .field-error.visible {
+        display: block;
+      }
+
+      .checkbox-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1.25rem 0 1.5rem;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: clamp(0.7rem, 2.2vw, 0.8rem);
+        color: #4a5568;
+        cursor: pointer;
+        line-height: 1.3;
+      }
+
+      .checkbox-label input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: #2563eb;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .checkbox-container > span {
+        font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+        color: #a0aec0;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.8rem 1.25rem;
+        border-radius: 10px;
+        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          box-shadow 0.2s,
+          transform 0.1s;
+        border: none;
+        background: #2563eb;
+        color: #ffffff;
+        line-height: 1.3;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-primary:active:not(:disabled) {
+        transform: scale(0.985);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .btn-submit-flex svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .security-badge-flat {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        margin-top: 1.75rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+        color: #4a5568;
+        line-height: 1.5;
+      }
+
+      .security-badge-flat svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: #b45309;
+      }
+
+      .security-badge-flat div {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .security-badge-flat strong {
+        color: #2d3748;
+      }
+
+      .bottom-nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.35rem 0.5rem;
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid #e2e8f0;
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+      }
+
+      .bottom-nav-links a {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+        white-space: nowrap;
+      }
+
+      .bottom-nav-links a:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+      }
+
+      .page-footer {
+        max-width: 1200px;
+        width: 100%;
+        margin: 2.5rem auto 0;
+        padding: 1.25rem 1rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+        color: #94a3b8;
+        border-top: 1px solid #e2e8f0;
+        flex-shrink: 0;
+      }
+
+      .footer-right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .page-wrapper {
+          padding: 0.75rem;
+        }
+
+        .auth-container {
+          padding: 1.5rem 1.25rem;
+          border-radius: 12px;
+        }
+
+        .tab-selector {
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .tab-selector .btn-primary {
+          min-width: unset;
+          width: 100%;
+          padding: 0.65rem 0.75rem;
+        }
+
+        .label-container {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.15rem;
+        }
+
+        .meta-right-text {
+          font-size: 0.6rem;
+        }
+
+        .input-wrapper input {
+          padding: 0.65rem 0.6rem 0.65rem 0.4rem;
+        }
+
+        .input-wrapper input::placeholder {
+          font-size: 0.7rem;
+        }
+
+        .checkbox-container {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.4rem;
+        }
+
+        .security-badge-flat {
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.85rem;
+        }
+
+        .security-badge-flat svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .page-footer {
+          flex-direction: column;
+          text-align: center;
+          padding: 1rem 0.5rem 0;
+          margin-top: 1.75rem;
+        }
+
+        .footer-right {
+          justify-content: center;
+          gap: 0.4rem 1rem;
+        }
+
+        .bottom-nav-links a {
+          font-size: 0.7rem;
+          padding: 0.2rem 0.3rem;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .auth-container {
+          padding: 1.15rem 0.9rem;
+          border-radius: 10px;
+        }
+
+        .header-logo h1 {
+          font-size: 0.8rem;
+          letter-spacing: 1px;
+        }
+
+        .header-logo p {
+          font-size: 0.6rem;
+        }
+
+        .access-tag {
+          font-size: 0.55rem;
+          padding: 0.25rem 0.75rem;
+        }
+
+        .auth-container h2 {
+          font-size: 1rem;
+        }
+
+        .btn-primary {
+          font-size: 0.75rem;
+          padding: 0.65rem 0.75rem;
+        }
+
+        .input-wrapper input {
+          font-size: 0.75rem;
+          padding: 0.6rem 0.5rem 0.6rem 0.35rem;
+        }
+
+        .input-wrapper input::placeholder {
+          font-size: 0.65rem;
+        }
+
+        .security-badge-flat {
+          font-size: 0.6rem;
+          padding: 0.7rem;
+        }
+
+        .page-footer {
+          font-size: 0.55rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <!-- Top Branding Logo Section -->
+      <div class="header-logo">
+        <svg
+          viewBox="0 0 24 24"
+          width="48"
+          height="48"
+          aria-label="STAR University logo"
+        >
+          <defs>
+            <linearGradient
+              id="blue-3d-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stop-color="#93c5fd" />
+              <stop offset="30%" stop-color="#2563eb" />
+              <stop offset="70%" stop-color="#1e40af" />
+              <stop offset="100%" stop-color="#1e3a8a" />
+            </linearGradient>
+          </defs>
+          <path
+            fill="url(#blue-3d-gradient)"
+            d="M12,3L1,9L12,15L21,9M19,11.41V17.5C19,18.36 15.87,19 12,19C8.13,19 5,18.36 5,17.5V11.41L12,15.22L19,11.41Z"
+          />
+        </svg>
+
+        <h1>STAR University</h1>
+        <p>Office of the University Registrar &bull; Institutional Portal</p>
+      </div>
+
+      <!-- Main Card Body Container -->
+      <div class="auth-wrapper">
+        <div class="auth-container">
+          <!-- Blueprint Building Emblem Header -->
+          <div class="building-circle">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 21h18M3 10h18M5 10V4a2 2 0 012-2h10a2 2 0 012 2v6M7 10v11M11 10v11M15 10v11"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div class="access-tag">Institutional Access Management</div>
+          <h2>Sign In to Star University Portal</h2>
+          <p>Academic Records &amp; Course Enrollment</p>
+
+          <!-- Tab Selector -->
+          <div class="tab-selector">
+            <button
+              type="button"
+              id="student-tab"
+              class="btn-primary btn-submit-flex active"
+              aria-pressed="true"
+            >
+              <span>Student</span>
+            </button>
+
+            <button
+              type="button"
+              id="staff-tab"
+              class="btn-primary btn-submit-flex"
+              aria-pressed="false"
+            >
+              <span>Faculty &amp; Staff</span>
+            </button>
+          </div>
+
+          <form id="portal-login-form" novalidate>
+            <!-- Username Input Field -->
+            <div class="form-group">
+              <div class="label-container">
+                <label for="username">Institutional Email / Student ID</label>
+                <span class="meta-right-text">STU-XXXXXX</span>
+              </div>
+              <div class="input-wrapper" id="username-wrapper">
+                <div class="input-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12ZM16 12V13.5C16 14.8807 17.1193 16 18.5 16C19.8807 16 21 14.8807 21 13.5V12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21H16"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="username"
+                  class="form-control"
+                  placeholder="e.g. naledi.k@university.edu or STU-884210"
+                  required
+                  autocomplete="username"
+                />
+              </div>
+              <div class="field-error" id="username-error">
+                Please enter your institutional email or Student ID.
+              </div>
+            </div>
+
+            <!-- Password Input Field -->
+            <div class="form-group">
+              <div class="label-container">
+                <label for="password">Portal Security Key / Password</label>
+                <a href="forgot-password.html">🔑 Forgot password?</a>
+              </div>
+              <div class="input-wrapper" id="password-wrapper">
+                <div class="input-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 15V17M12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9ZM18 10.5V8.5C18 4.91015 15.0899 2 11.5 2C7.91015 2 5 4.91015 5 8.5V10.5M4.6 10.5H18.4C19.5201 10.5 20.0802 10.5 20.508 10.718M20.508 10.718C20.8843 10.9098 21.0902 11.2157 21.282 11.592C21.5 12.0198 21.5 12.5799 21.5 13.7V18.3C21.5 19.4201 21.5 19.9802 21.282 20.408C21.0902 20.7843 20.8843 21.0902 20.508 21.282C20.0802 21.5 19.5201 21.5 18.3 21.5H4.7C3.5799 21.5 3.0198 21.5 2.59202 21.282C2.21573 21.0902 2.00977 20.7843 1.81799 20.408C1.6 19.9802 1.6 19.4201 1.6 18.3V13.7C1.6 12.5799 1.6 12.0198 1.81799 11.592C2.00977 11.2157 2.21573 10.9098 2.59202 10.718C3.0198 10.5 3.5799 10.5 4.7 10.5Z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="Enter your confidential password"
+                  required
+                  autocomplete="current-password"
+                />
+              </div>
+              <div class="field-error" id="password-error">
+                Please enter your password.
+              </div>
+            </div>
+
+            <!-- Custom Checkbox Layer -->
+            <div class="checkbox-container">
+              <label class="checkbox-label">
+                <input type="checkbox" id="remember-me" /> Remember my
+                institutional workstation
+              </label>
+              <span>🔒 TLS 1.3</span>
+            </div>
+
+            <!-- Primary Action Submission Button -->
+            <button type="submit" class="btn-primary btn-submit-flex" id="submit-btn">
+              <span id="submit-btn-text">Authenticate &amp; Enter Portal</span>
+              <svg
+                id="submit-btn-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 12H19M19 12L12 5M19 12L12 19"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </form>
+
+          <!-- Bottom Protected SSO Policy Statement Component -->
+          <div class="security-badge-flat">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 15V17M12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9ZM18 10.5V8.5C18 4.91015 15.0899 2 11.5 2C7.91015 2 5 4.91015 5 8.5V10.5M4.6 10.5H18.4C19.5201 10.5 20.0802 10.5 20.508 10.718M20.508 10.718C20.8843 10.9098 21.0902 11.2157 21.282 11.592C21.5 12.0198 21.5 12.5799 21.5 13.7V18.3C21.5 19.4201 21.5 19.9802 21.282 20.408C21.0902 20.7843 20.8843 21.0902 20.508 21.282C20.0802 21.5 19.5201 21.5 18.3 21.5H4.7C3.5799 21.5 3.0198 21.5 2.59202 21.282C2.21573 21.0902 2.00977 20.7843 1.81799 20.408C1.6 19.9802 1.6 19.4201 1.6 18.3V13.7C1.6 12.5799 1.6 12.0198 1.81799 11.592C2.00977 11.2157 2.21573 10.9098 2.59202 10.718C3.0198 10.5 3.5799 10.5 4.7 10.5Z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <div>
+              <div>Federated Single Sign-On (SSO) Protected</div>
+              <p>
+                Authorized academic access only. All actions are logged and
+                subject to the
+                <strong>Star University IT Acceptable Use Policy</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Horizontal Utility Submenu Links -->
+          <div class="bottom-nav-links">
+            <a href="signup.html">Register Student Profile</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Base Page Global Institutional Footer Component -->
+      <div class="page-footer">
+        <div>
+          © 2026 Star University, Chartered Higher Education Institution. All
+          rights reserved.
+        </div>
+        <div class="footer-right">
+          <span>Institutional Accreditation Board (IAB) Certified</span>
+          <span>Academic Integrity Registry</span>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="login.js"></script>
+  </body>
+</html>
